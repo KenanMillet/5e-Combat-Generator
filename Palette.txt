@@ -1,0 +1,6 @@
+https://coolors.co/9b2818-000000-f8f2d3-8d6b94-32213a
+Red: 155, 40, 24
+Yellow: 248, 242, 211
+Black: 0, 0, 0
+purple: 141, 107, 148
+dark purple: 50, 33, 58

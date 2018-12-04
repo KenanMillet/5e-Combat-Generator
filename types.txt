@@ -1,0 +1,47 @@
+Aberration
+Beast
+Celestial
+Construct
+Dragon
+Elemental
+Fey
+Fiend
+Giant
+Humanoid
+Monstrocity
+Ooze
+Plant
+Undead
+
+Animated Objects
+Demons
+Devils
+Grimlock
+Human
+Any Race
+Dwarf
+Elf
+Gnome
+Goblinoid
+Lizardfolk
+Mephits
+Swarm Of Tiny Beasts
+
+Angels
+Dragons
+Elementals
+Genies
+Ghouls
+Giants
+Golems
+Hags
+Dinosaurs
+Fungi
+Gnoll
+Lycanthropes
+Merfolk
+Mummies
+Sahuagin
+Shapechanger
+Skeletons
+Titan

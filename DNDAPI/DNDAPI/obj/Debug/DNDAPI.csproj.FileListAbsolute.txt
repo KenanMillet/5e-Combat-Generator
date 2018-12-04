@@ -1,0 +1,15 @@
+\\HUBBLE2017\Hubble2017\2018 Fall Course File Server\CIT 330 Data Structures & Algorithms\Zachary Tassinari\(9)DnD API Final\DNDAPI\DNDAPI\bin\Debug\DNDAPI.exe.config
+\\HUBBLE2017\Hubble2017\2018 Fall Course File Server\CIT 330 Data Structures & Algorithms\Zachary Tassinari\(9)DnD API Final\DNDAPI\DNDAPI\bin\Debug\DNDAPI.exe
+\\HUBBLE2017\Hubble2017\2018 Fall Course File Server\CIT 330 Data Structures & Algorithms\Zachary Tassinari\(9)DnD API Final\DNDAPI\DNDAPI\bin\Debug\DNDAPI.pdb
+\\HUBBLE2017\Hubble2017\2018 Fall Course File Server\CIT 330 Data Structures & Algorithms\Zachary Tassinari\(9)DnD API Final\DNDAPI\DNDAPI\obj\Debug\DNDAPI.Properties.Resources.resources
+\\HUBBLE2017\Hubble2017\2018 Fall Course File Server\CIT 330 Data Structures & Algorithms\Zachary Tassinari\(9)DnD API Final\DNDAPI\DNDAPI\obj\Debug\DNDAPI.csproj.GenerateResource.Cache
+\\HUBBLE2017\Hubble2017\2018 Fall Course File Server\CIT 330 Data Structures & Algorithms\Zachary Tassinari\(9)DnD API Final\DNDAPI\DNDAPI\obj\Debug\DNDAPI.csproj.CoreCompileInputs.cache
+\\HUBBLE2017\Hubble2017\2018 Fall Course File Server\CIT 330 Data Structures & Algorithms\Zachary Tassinari\(9)DnD API Final\DNDAPI\DNDAPI\obj\Debug\DNDAPI.exe
+\\HUBBLE2017\Hubble2017\2018 Fall Course File Server\CIT 330 Data Structures & Algorithms\Zachary Tassinari\(9)DnD API Final\DNDAPI\DNDAPI\obj\Debug\DNDAPI.pdb
+\\HUBBLE2017\Hubble2017\2018 Fall Course File Server\CIT 330 Data Structures & Algorithms\Zachary Tassinari\(9)DnD API Final\DNDAPI\DNDAPI\obj\Debug\DNDAPI.FormMain.resources
+\\HUBBLE2017\Hubble2017\2018 Fall Course File Server\CIT 330 Data Structures & Algorithms\Zachary Tassinari\(9)DnD API Final\DNDAPI\DNDAPI\bin\Debug\Newtonsoft.Json.dll
+\\HUBBLE2017\Hubble2017\2018 Fall Course File Server\CIT 330 Data Structures & Algorithms\Zachary Tassinari\(9)DnD API Final\DNDAPI\DNDAPI\bin\Debug\System.Net.Http.Formatting.dll
+\\HUBBLE2017\Hubble2017\2018 Fall Course File Server\CIT 330 Data Structures & Algorithms\Zachary Tassinari\(9)DnD API Final\DNDAPI\DNDAPI\bin\Debug\Newtonsoft.Json.xml
+\\HUBBLE2017\Hubble2017\2018 Fall Course File Server\CIT 330 Data Structures & Algorithms\Zachary Tassinari\(9)DnD API Final\DNDAPI\DNDAPI\bin\Debug\System.Net.Http.Formatting.xml
+\\HUBBLE2017\Hubble2017\2018 Fall Course File Server\CIT 330 Data Structures & Algorithms\Zachary Tassinari\(9)DnD API Final\DNDAPI\DNDAPI\obj\Debug\DNDAPI.csprojAssemblyReference.cache
+\\HUBBLE2017\Hubble2017\2018 Fall Course File Server\CIT 330 Data Structures & Algorithms\Zachary Tassinari\(9)DnD API Final\DNDAPI\DNDAPI\obj\Debug\DNDAPI.csproj.CopyComplete
