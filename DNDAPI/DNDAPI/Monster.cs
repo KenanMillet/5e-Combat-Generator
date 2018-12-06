@@ -93,7 +93,22 @@ namespace DNDAPI
 
         public override string ToString()
         {
-            return "\n" + Name + "\n " + MainType + ", " + Subtype + ", " + MonsterGroup +  " \n" + CR.ToString() + " \n" + HD.ToString() + " + " + ModHD + " \n"  + Source + " \n" + " \n";
+            if(Subtype == null)
+            {
+                return "\n" + Name + "\n " + MainType + ", " + MonsterGroup + " \n" + CR.ToString() + " \n" + HD.ToString() + " + " + ModHD + " \n" + Source + " \n" + " \n";
+            }
+            else if(MonsterGroup == null)
+            {
+                return "\n" + Name + "\n " + MainType + ", " + MonsterGroup + " \n" + CR.ToString() + " \n" + HD.ToString() + " + " + ModHD + " \n" + Source + " \n" + " \n";
+            }
+            else if(Subtype == null && MonsterGroup == null)
+            {
+                return "\n" + Name + "\n " + MainType + ", " + " \n" + CR.ToString() + " \n" + HD.ToString() + " + " + ModHD + " \n" + Source + " \n" + " \n";
+            }
+            else
+            {
+                return "\n" + Name + "\n " + MainType + ", " + Subtype + ", " + MonsterGroup + " \n" + CR.ToString() + " \n" + HD.ToString() + " + " + ModHD + " \n" + Source + " \n" + " \n";
+            }
         }
     }
 }

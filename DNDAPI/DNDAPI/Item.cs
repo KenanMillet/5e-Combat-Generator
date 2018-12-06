@@ -37,7 +37,7 @@ namespace DNDAPI
 
         public string GetTitle()
         {
-            return Quality+ " " + Name + "\n";
+            return Quality + " " + Name + "\n";
         }
 
         public string GetSubTitle()

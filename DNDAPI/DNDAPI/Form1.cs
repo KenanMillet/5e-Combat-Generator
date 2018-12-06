@@ -58,6 +58,7 @@ namespace DNDAPI
 
             if (compendium == null)
             {
+                BoxOutput.AppendText("Generating compendium..." + "\n");
                 generateCompendium();
             }
             // INPUT VALIDATION AND VARIABLE POPULATION
@@ -110,6 +111,7 @@ namespace DNDAPI
                 {
                     RestrictedTypes[i] = RestrictedTypes[i].Trim(' ');
                 }
+                BoxOutput.AppendText("Generating encounter...");
                 encounter = new Encounter(pcTotal, pcLevel, difficulty, Convert.ToInt32(BoxSameChance.Text), CheckBoxCohesion.Checked , RestrictedTypes, compendium);
                 PrintEncounter(encounter);
                 //foreach (Monster m in compendium.FullMonsterList)
@@ -143,10 +145,7 @@ namespace DNDAPI
                 string page = client.DownloadString(URL + "?page=" + i + "&format=json");
 
                 data += page.Remove(0, page.IndexOf("results") + 10).TrimEnd('}').TrimEnd(']') + ",";
-
-
             }
-            System.Diagnostics.Debug.WriteLine("Data List: " + data);
             return data.TrimEnd(',') + "]";
         }
 
@@ -271,11 +270,11 @@ namespace DNDAPI
             monsterData = FetchData(baseURL + monsterUrl, 7);
             itemData = FetchData(baseURL + itemsUrl, 5);
             monsterDataList = new JavaScriptSerializer().Deserialize<List<MonsterData>>(monsterData);
-            System.Diagnostics.Debug.WriteLine("monsterList: " + monsterDataList.Count + " items");
-            System.Diagnostics.Debug.WriteLine("Example" + monsterDataList[rand.Next(monsterDataList.Count)].ToString());
+            //System.Diagnostics.Debug.WriteLine("monsterList: " + monsterDataList.Count + " items");
+            //System.Diagnostics.Debug.WriteLine("Example" + monsterDataList[rand.Next(monsterDataList.Count)].ToString());
             itemDataList = new JavaScriptSerializer().Deserialize<List<ItemData>>(itemData);
-            System.Diagnostics.Debug.WriteLine("itemList: " + itemDataList.Count + "items");
-            System.Diagnostics.Debug.WriteLine("Example" + itemDataList[rand.Next(itemDataList.Count)].ToString());
+            //System.Diagnostics.Debug.WriteLine("itemList: " + itemDataList.Count + "items");
+            //System.Diagnostics.Debug.WriteLine("Example" + itemDataList[rand.Next(itemDataList.Count)].ToString());
 
             for (int i = 0; i < monsterDataList.Count; i++)
             {
@@ -292,15 +291,22 @@ namespace DNDAPI
 
         private void PrintEncounter(Encounter encounter)
         {
-            System.Diagnostics.Debug.WriteLine("print encounter");
+            BoxOutput.Clear();
             BoxOutput.AppendText(encounter.getGeneralData());
             foreach(Monster m in encounter.ChosenMonsters)
             {
                 PrintMonster(m);
             }
-            foreach (Item i in encounter.ChosenItems)
+            if(encounter.ChosenItems.Count > 0)
             {
-                PrintItem(i);
+                foreach (Item i in encounter.ChosenItems)
+                {
+                    PrintItem(i);
+                }
+            }
+            else
+            {
+                BoxOutput.AppendText("The amount of gold generated in this encounter was too little to find a magic item.");
             }
         }
 

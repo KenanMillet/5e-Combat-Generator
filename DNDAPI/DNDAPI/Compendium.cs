@@ -116,17 +116,23 @@ namespace DNDAPI
                 add = true;
                 foreach (string s in restrictedTypes)
                 {
-                    if(m.MainType == s)
+                    if(m.MainType.ToLower() == s)
                     {
                         add = false;
                     }
-                    if(m.Subtype == s)
+                    if(m.Subtype != null)
                     {
-                        add = false;
+                        if (m.Subtype.ToLower() == s)
+                        {
+                            add = false;
+                        }
                     }
-                    if (m.MonsterGroup == s)
+                    if (m.MonsterGroup != null)
                     {
-                        add = false;
+                        if (m.MonsterGroup.ToLower() == s)
+                        {
+                            add = false;
+                        }
                     }
                 }
                 if (add == true)

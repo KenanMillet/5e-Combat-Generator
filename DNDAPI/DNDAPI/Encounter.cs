@@ -44,41 +44,35 @@ namespace DNDAPI
             ChosenItems = new List<Item>();
         }
 
-        public Encounter(int enPCs, int enPCLvls, int[] enDifficulty, int enChanceForSame, bool singleType,  List<string> restrictedTypes, Compendium newCompendium)
+        public Encounter(int enPCs, int enPCLvls, int[] enDifficulty, int enChanceForSame, bool enSingleType,  List<string> enRestrictedTypes, Compendium enCompendium)
         {
-            System.Diagnostics.Debug.WriteLine("encounter");
-            compendium = newCompendium;
+            compendium = enCompendium;
             DifficultyValues = enDifficulty;
             PCs = enPCs;
             PCLvls = enPCLvls;
             ChanceForSame = enChanceForSame;
+            SingleType = enSingleType;
             ExpValues = compendium.ExpValues;
-            System.Diagnostics.Debug.WriteLine("2");
             BaseExp = DetermineBaseExp();
-            RestrictedTypes = restrictedTypes;
-            System.Diagnostics.Debug.WriteLine("3");
+            RestrictedTypes = enRestrictedTypes;
             AvailableMonsters = compendium.getSortedMonster(RestrictedTypes);
-            System.Diagnostics.Debug.WriteLine("4");
             ChosenMonsters = PickMonsters();
-            System.Diagnostics.Debug.WriteLine("5");
             GoldAmt = DetermineGold();
-            System.Diagnostics.Debug.WriteLine("6");
             if (GoldAmt > compendium.CommonItemValueMin)
             {
                 ChosenItems = FindPotentialItems(GoldAmt);
             }
-            System.Diagnostics.Debug.WriteLine("7");
+            else
+            {
+                ChosenItems = new List<Item>();
+            }
             AdjExpMult = DetermineAdjustedExp();
-            System.Diagnostics.Debug.WriteLine("8");
-            //while
         }
 
         public int DetermineBaseExp()
         {
-            int expTotal = DifficultyValues[PCLvls];
-            System.Diagnostics.Debug.WriteLine("expTotal = " + DifficultyValues[PCLvls]);
+            int expTotal = DifficultyValues[PCLvls - 1];
             expTotal *= PCs;
-            System.Diagnostics.Debug.WriteLine("expTotal = " + expTotal);
             return expTotal;
         }
 
@@ -90,28 +84,33 @@ namespace DNDAPI
             Random rand = new Random();
             int monsterIndex = rand.Next(0, AvailableMonsters.Count);
             chosenMonster = AvailableMonsters[monsterIndex];
-            string monsterType = chosenMonster.MainType;
+            string monsterType;
             while (totalExp < (BaseExp * .8))
              {
-                if(ExpValues[chosenMonster.CR] + totalExp < BaseExp) //if the exp given according to the CR + the current exptotal is greater than the base exp of the encounter, then
+                if (ExpValues[chosenMonster.CR] + totalExp <= BaseExp) //if the exp given according to the CR + the current exptotal is greater than the base exp of the encounter, then
                 {
                     if (SingleType == true)
                     {
+                        monsterType = chosenMonster.MainType;
                         if (chosenMonster.MainType == monsterType)
                         {
                             totalExp += ExpValues[chosenMonster.CR];
                             pickedMons.Add(chosenMonster);
-                            if (d100.Roll(1, 0) < ChanceForSame)//if its less than the chance threshold for a different monster
+                            if (d100.Roll(1, 0) > ChanceForSame)//if its less than the chance threshold for a different monster
                             {
                                 chosenMonster = AvailableMonsters[rand.Next(0, AvailableMonsters.Count)];
                             }
+                        }
+                        else
+                        {
+                            chosenMonster = AvailableMonsters[rand.Next(0, AvailableMonsters.Count)];
                         }
                     }
                     else
                     {
                         totalExp += ExpValues[chosenMonster.CR];
                         pickedMons.Add(chosenMonster);
-                        if( d100.Roll(1, 0) < ChanceForSame)//if its less than the chance threshold for a different monster
+                        if( d100.Roll(1, 0) > ChanceForSame)//if its above the roll, then pick a new one.
                         {
                             chosenMonster = AvailableMonsters[rand.Next(0, AvailableMonsters.Count)];
                         }
@@ -124,6 +123,7 @@ namespace DNDAPI
                 }
 
             }
+            ExpAmt = totalExp;
             return pickedMons;
         }
 
@@ -140,43 +140,32 @@ namespace DNDAPI
                 foundKey = 0;
                 if (m.CR.Total <= 4)
                 {
-                    System.Diagnostics.Debug.WriteLine("cr 4");
                     valueTable = compendium.CR0_4Gold;
-                    
                 }
                 else if (m.CR.Total <= 10)
                 {
-                    System.Diagnostics.Debug.WriteLine("cr 10");
                     valueTable = compendium.CR5_10Gold;
                 }
                 else if (m.CR.Total <= 16)
                 {
                     valueTable = compendium.CR11_16Gold;
-                    System.Diagnostics.Debug.WriteLine("cr 16");
-                    
                 }
                 else
                 {
                     valueTable = compendium.CR17_Gold;
-                    System.Diagnostics.Debug.WriteLine("cr 17+");
-                    
                 }
-                System.Diagnostics.Debug.WriteLine("rlling keys");
                 foreach (int key in valueTable.Keys)
                 {
-                    System.Diagnostics.Debug.WriteLine("eh?");
-                    if (rolledNum <= key && key > foundKey)
+                    if (rolledNum <= key && rolledNum > foundKey)
                     {
                         foundKey = key;
                     }
                 }
                 foreach (Die d in valueTable[foundKey])
                 {
-                    System.Diagnostics.Debug.WriteLine("key roll");
                     copper += d.RollInternal(0);
                 }
             }
-            System.Diagnostics.Debug.WriteLine("return");
             return copper / 100; //for gold value
         }
 
@@ -187,10 +176,8 @@ namespace DNDAPI
             int itemIndex = rand.Next(0, compendium.FullItemList.Count);
             int currentValue = 0;
             Item i = compendium.FullItemList[itemIndex];
-            Item x = compendium.FullItemList[itemIndex];
-            i = DetermineItemQuality(x);
-            System.Diagnostics.Debug.WriteLine("FindPotentialItems");
-            while (currentValue < (GoldAmt * new decimal(0.8)))
+            i = DetermineItemQuality(i);
+            while (currentValue < (GoldAmt * new decimal(0.5)))
             {
                 if (currentValue + i.Value < gold) //if the exp given according to the CR + the current exptotal is greater than the base exp of the encounter, then
                 {
@@ -205,6 +192,7 @@ namespace DNDAPI
                 {
                     itemIndex = rand.Next(0, compendium.FullItemList.Count);
                     i = compendium.FullItemList[itemIndex];
+                    i = DetermineItemQuality(i);
                 }
              }
             return foundItems;
@@ -217,19 +205,19 @@ namespace DNDAPI
             {
                 i.Value = rand.Next(compendium.CommonItemValueMin, compendium.CommonItemValueMax);
 
-                if ( i.Value > compendium.CommonItemValueMin + (compendium.CommonItemValueMax * .2))
+                if ( i.Value < compendium.CommonItemValueMin + (compendium.CommonItemValueMax * .2))
                 {
                     i.Quality = "Shoddy";
                 }
-                else if (i.Value > compendium.CommonItemValueMin + (compendium.CommonItemValueMax * .4))
+                else if (i.Value < compendium.CommonItemValueMin + (compendium.CommonItemValueMax * .4))
                 {
                     i.Quality = "Fair";
                 }
-                else if (i.Value > compendium.CommonItemValueMin + (compendium.CommonItemValueMax * .6))
+                else if (i.Value < compendium.CommonItemValueMin + (compendium.CommonItemValueMax * .6))
                 {
                     i.Quality = "Average";
                 }
-                else if (i.Value > compendium.CommonItemValueMin + (compendium.CommonItemValueMax * .8))
+                else if (i.Value < compendium.CommonItemValueMin + (compendium.CommonItemValueMax * .8))
                 {
                     i.Quality = "Well Crafted";
                 }
@@ -242,19 +230,19 @@ namespace DNDAPI
             {
                 i.Value = rand.Next(compendium.CommonItemValueMax, compendium.UncommonItemValueMax);
 
-                if (i.Value > compendium.CommonItemValueMax + (compendium.UncommonItemValueMax* .2))
+                if (i.Value < compendium.CommonItemValueMax + (compendium.UncommonItemValueMax* .2))
                 {
                     i.Quality = "Shoddy";
                 }
-                else if (i.Value > compendium.CommonItemValueMax + (compendium.UncommonItemValueMax * .4))
+                else if (i.Value < compendium.CommonItemValueMax + (compendium.UncommonItemValueMax * .4))
                 {
                     i.Quality = "Fair";
                 }
-                else if (i.Value > compendium.CommonItemValueMax + (compendium.UncommonItemValueMax * .6))
+                else if (i.Value < compendium.CommonItemValueMax + (compendium.UncommonItemValueMax * .6))
                 {
                     i.Quality = "Average";
                 }
-                else if (i.Value > compendium.CommonItemValueMax + (compendium.UncommonItemValueMax * .8))
+                else if (i.Value < compendium.CommonItemValueMax + (compendium.UncommonItemValueMax * .8))
                 {
                     i.Quality = "Well Crafted";
                 }
@@ -267,19 +255,19 @@ namespace DNDAPI
             {
                 i.Value = rand.Next(compendium.UncommonItemValueMax, compendium.RareItemValueMax);
 
-                if (i.Value > compendium.UncommonItemValueMax + (compendium.RareItemValueMax * .2))
+                if (i.Value < compendium.UncommonItemValueMax + (compendium.RareItemValueMax * .2))
                 {
                     i.Quality = "Shoddy";
                 }
-                else if (i.Value > compendium.UncommonItemValueMax + (compendium.RareItemValueMax * .4))
+                else if (i.Value < compendium.UncommonItemValueMax + (compendium.RareItemValueMax * .4))
                 {
                     i.Quality = "Fair";
                 }
-                else if (i.Value > compendium.UncommonItemValueMax + (compendium.RareItemValueMax * .6))
+                else if (i.Value < compendium.UncommonItemValueMax + (compendium.RareItemValueMax * .6))
                 {
                     i.Quality = "Average";
                 }
-                else if (i.Value > compendium.UncommonItemValueMax + (compendium.RareItemValueMax * .8))
+                else if (i.Value < compendium.UncommonItemValueMax + (compendium.RareItemValueMax * .8))
                 {
                     i.Quality = "Well Crafted";
                 }
@@ -292,19 +280,19 @@ namespace DNDAPI
             {
                 i.Value = rand.Next(compendium.RareItemValueMax, compendium.VeryRareItemValueMax);
 
-                if (i.Value > compendium.RareItemValueMax + (compendium.VeryRareItemValueMax * .2))
+                if (i.Value < compendium.RareItemValueMax + (compendium.VeryRareItemValueMax * .2))
                 {
                     i.Quality = "Shoddy";
                 }
-                else if (i.Value > compendium.RareItemValueMax + (compendium.VeryRareItemValueMax * .4))
+                else if (i.Value < compendium.RareItemValueMax + (compendium.VeryRareItemValueMax * .4))
                 {
                     i.Quality = "Fair";
                 }
-                else if (i.Value > compendium.RareItemValueMax + (compendium.VeryRareItemValueMax * .6))
+                else if (i.Value < compendium.RareItemValueMax + (compendium.VeryRareItemValueMax * .6))
                 {
                     i.Quality = "Average";
                 }
-                else if (i.Value > compendium.RareItemValueMax + (compendium.VeryRareItemValueMax * .8))
+                else if (i.Value < compendium.RareItemValueMax + (compendium.VeryRareItemValueMax * .8))
                 {
                     i.Quality = "Well Crafted";
                 }
@@ -328,21 +316,21 @@ namespace DNDAPI
 
             foreach (int key in valueTable.Keys)
             {
-                if (ChosenMonsters.Count <= key)
+                if (ChosenMonsters.Count <= key && ChosenMonsters.Count > foundKey)
                 {
                     foundKey = key;
                 }
             }
-                if (foundKey == 0)
-                {
-                    foundKey = valueTable.Keys.Last();
-                }
+            if( foundKey == 0)
+            {
+                foundKey = valueTable.Keys.Last();
+            }
             return valueTable[foundKey];
         }
 
         public string getGeneralData()
         {
-            return "Exp Goal: " + BaseExp + " | " + "Exp Generated: " + ExpAmt + "\n" + "Adjusted Exp Amt: " + (ExpAmt * AdjExpMult) + "\n" + "Gold Generated: " + GoldAmt;
+            return "Exp Goal: " + BaseExp + " | " + "Exp Generated: " + ExpAmt + "\n" + "Total Creatures: " + ChosenMonsters.Count + "\n" + "Adjusted Exp Amt: " + (ExpAmt * AdjExpMult) + "\n" + "Exp Per Player: " + (ExpAmt / PCs) +  "\n" + "Gold Generated: " + GoldAmt + "\n";
         }
     }
 }
