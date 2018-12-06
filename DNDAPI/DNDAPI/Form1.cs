@@ -139,6 +139,7 @@ namespace DNDAPI
 
             for (int i = 1; i < numPages + 1; i++)//pages on the site begin at 1, not 0.
             {
+                System.Threading.Thread.Sleep(1000);//need to wait for 1 second inbetween request so I dont overwhelm the server :S
                 string page = client.DownloadString(URL + "?page=" + i + "&format=json");
 
                 data += page.Remove(0, page.IndexOf("results") + 10).TrimEnd('}').TrimEnd(']') + ",";

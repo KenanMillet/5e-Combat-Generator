@@ -187,16 +187,19 @@ namespace DNDAPI
             int itemIndex = rand.Next(0, compendium.FullItemList.Count);
             int currentValue = 0;
             Item i = compendium.FullItemList[itemIndex];
+            Item x = compendium.FullItemList[itemIndex];
+            i = DetermineItemQuality(x);
             System.Diagnostics.Debug.WriteLine("FindPotentialItems");
             while (currentValue < (GoldAmt * new decimal(0.8)))
             {
                 if (currentValue + i.Value < gold) //if the exp given according to the CR + the current exptotal is greater than the base exp of the encounter, then
                 {
+                    currentValue += i.Value;
                     foundItems.Add(i);
                     itemIndex = rand.Next(0, compendium.FullItemList.Count);
                     i = compendium.FullItemList[itemIndex];
-                    DetermineItemQuality(i);
-                    currentValue += i.Value;
+                    i = DetermineItemQuality(i);
+                    
                 }
                 else
                 {
@@ -210,11 +213,10 @@ namespace DNDAPI
         public Item DetermineItemQuality(Item i)
         {
             Random rand = new Random();
-            if (i.Rarity == "Common")
+            if (i.Rarity == "common")
             {
                 i.Value = rand.Next(compendium.CommonItemValueMin, compendium.CommonItemValueMax);
 
-                 
                 if ( i.Value > compendium.CommonItemValueMin + (compendium.CommonItemValueMax * .2))
                 {
                     i.Quality = "Shoddy";
@@ -236,9 +238,11 @@ namespace DNDAPI
                     i.Quality = "Masterwork";
                 }
             }
-            else if (i.Rarity == "Uncommon")
+            else if (i.Rarity == "uncommon")
             {
-                if(i.Value > compendium.CommonItemValueMax + (compendium.UncommonItemValueMax* .2))
+                i.Value = rand.Next(compendium.CommonItemValueMax, compendium.UncommonItemValueMax);
+
+                if (i.Value > compendium.CommonItemValueMax + (compendium.UncommonItemValueMax* .2))
                 {
                     i.Quality = "Shoddy";
                 }
@@ -259,8 +263,10 @@ namespace DNDAPI
                     i.Quality = "Masterwork";
                 }
             }
-            else if (i.Rarity == "Rare")
+            else if (i.Rarity == "rare")
             {
+                i.Value = rand.Next(compendium.UncommonItemValueMax, compendium.RareItemValueMax);
+
                 if (i.Value > compendium.UncommonItemValueMax + (compendium.RareItemValueMax * .2))
                 {
                     i.Quality = "Shoddy";
@@ -282,8 +288,10 @@ namespace DNDAPI
                     i.Quality = "Masterwork";
                 }
             }
-            else if (i.Rarity == "Very Rare")
+            else if (i.Rarity == "very rare")
             {
+                i.Value = rand.Next(compendium.RareItemValueMax, compendium.VeryRareItemValueMax);
+
                 if (i.Value > compendium.RareItemValueMax + (compendium.VeryRareItemValueMax * .2))
                 {
                     i.Quality = "Shoddy";
@@ -307,6 +315,7 @@ namespace DNDAPI
             }
             else
             {
+                i.Value = rand.Next(compendium.VeryRareItemValueMax, compendium.VeryRareItemValueMax * 2);
                 i.Quality = "Legendary";
             }
             return i;
