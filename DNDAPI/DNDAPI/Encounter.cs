@@ -97,9 +97,14 @@ namespace DNDAPI
                 {
                     if (SingleType == true)
                     {
-                        while (chosenMonster.MainType != monsterType)
+                        if (chosenMonster.MainType == monsterType)
                         {
-                            chosenMonster = AvailableMonsters[monsterIndex];
+                            totalExp += ExpValues[chosenMonster.CR];
+                            pickedMons.Add(chosenMonster);
+                            if (d100.Roll(1, 0) < ChanceForSame)//if its less than the chance threshold for a different monster
+                            {
+                                chosenMonster = AvailableMonsters[rand.Next(0, AvailableMonsters.Count)];
+                            }
                         }
                     }
                     else
@@ -108,10 +113,16 @@ namespace DNDAPI
                         pickedMons.Add(chosenMonster);
                         if( d100.Roll(1, 0) < ChanceForSame)//if its less than the chance threshold for a different monster
                         {
-                            chosenMonster = AvailableMonsters[monsterIndex];
+                            chosenMonster = AvailableMonsters[rand.Next(0, AvailableMonsters.Count)];
                         }
                     }
                 }
+                else
+                {
+                    monsterIndex = rand.Next(0, AvailableMonsters.Count);
+                    chosenMonster = AvailableMonsters[monsterIndex];
+                }
+
             }
             return pickedMons;
         }
