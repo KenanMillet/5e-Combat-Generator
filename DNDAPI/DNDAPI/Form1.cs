@@ -271,10 +271,10 @@ namespace DNDAPI
             itemData = FetchData(baseURL + itemsUrl, 5);
             monsterDataList = new JavaScriptSerializer().Deserialize<List<MonsterData>>(monsterData);
             System.Diagnostics.Debug.WriteLine("monsterList: " + monsterDataList.Count + " items");
-            System.Diagnostics.Debug.WriteLine("Example" + monsterDataList[rand.Next(monsterDataList.Count - 1)].ToString());
+            System.Diagnostics.Debug.WriteLine("Example" + monsterDataList[rand.Next(monsterDataList.Count)].ToString());
             itemDataList = new JavaScriptSerializer().Deserialize<List<ItemData>>(itemData);
             System.Diagnostics.Debug.WriteLine("itemList: " + itemDataList.Count + "items");
-            System.Diagnostics.Debug.WriteLine("Example" + itemDataList[rand.Next(itemDataList.Count - 1)].ToString());
+            System.Diagnostics.Debug.WriteLine("Example" + itemDataList[rand.Next(itemDataList.Count)].ToString());
 
             for (int i = 0; i < monsterDataList.Count; i++)
             {
@@ -291,6 +291,7 @@ namespace DNDAPI
 
         private void PrintEncounter(Encounter encounter)
         {
+            System.Diagnostics.Debug.WriteLine("print encounter");
             BoxOutput.AppendText(encounter.getGeneralData());
             foreach(Monster m in encounter.ChosenMonsters)
             {

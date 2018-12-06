@@ -13,3 +13,17 @@
 \\HUBBLE2017\Hubble2017\2018 Fall Course File Server\CIT 330 Data Structures & Algorithms\Zachary Tassinari\(9)DnD API Final\DNDAPI\DNDAPI\bin\Debug\System.Net.Http.Formatting.xml
 \\HUBBLE2017\Hubble2017\2018 Fall Course File Server\CIT 330 Data Structures & Algorithms\Zachary Tassinari\(9)DnD API Final\DNDAPI\DNDAPI\obj\Debug\DNDAPI.csprojAssemblyReference.cache
 \\HUBBLE2017\Hubble2017\2018 Fall Course File Server\CIT 330 Data Structures & Algorithms\Zachary Tassinari\(9)DnD API Final\DNDAPI\DNDAPI\obj\Debug\DNDAPI.csproj.CopyComplete
+C:\Users\student\Desktop\5e-Combat-Generator\DNDAPI\DNDAPI\bin\Debug\DNDAPI.exe.config
+C:\Users\student\Desktop\5e-Combat-Generator\DNDAPI\DNDAPI\bin\Debug\DNDAPI.exe
+C:\Users\student\Desktop\5e-Combat-Generator\DNDAPI\DNDAPI\bin\Debug\DNDAPI.pdb
+C:\Users\student\Desktop\5e-Combat-Generator\DNDAPI\DNDAPI\bin\Debug\Newtonsoft.Json.dll
+C:\Users\student\Desktop\5e-Combat-Generator\DNDAPI\DNDAPI\bin\Debug\System.Net.Http.Formatting.dll
+C:\Users\student\Desktop\5e-Combat-Generator\DNDAPI\DNDAPI\bin\Debug\Newtonsoft.Json.xml
+C:\Users\student\Desktop\5e-Combat-Generator\DNDAPI\DNDAPI\bin\Debug\System.Net.Http.Formatting.xml
+C:\Users\student\Desktop\5e-Combat-Generator\DNDAPI\DNDAPI\obj\Debug\DNDAPI.csprojResolveAssemblyReference.cache
+C:\Users\student\Desktop\5e-Combat-Generator\DNDAPI\DNDAPI\obj\Debug\DNDAPI.FormMain.resources
+C:\Users\student\Desktop\5e-Combat-Generator\DNDAPI\DNDAPI\obj\Debug\DNDAPI.Properties.Resources.resources
+C:\Users\student\Desktop\5e-Combat-Generator\DNDAPI\DNDAPI\obj\Debug\DNDAPI.csproj.GenerateResource.Cache
+C:\Users\student\Desktop\5e-Combat-Generator\DNDAPI\DNDAPI\obj\Debug\DNDAPI.csproj.CoreCompileInputs.cache
+C:\Users\student\Desktop\5e-Combat-Generator\DNDAPI\DNDAPI\obj\Debug\DNDAPI.exe
+C:\Users\student\Desktop\5e-Combat-Generator\DNDAPI\DNDAPI\obj\Debug\DNDAPI.pdb

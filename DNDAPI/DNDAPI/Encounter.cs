@@ -46,22 +46,30 @@ namespace DNDAPI
 
         public Encounter(int enPCs, int enPCLvls, int[] enDifficulty, int enChanceForSame, bool singleType,  List<string> restrictedTypes, Compendium newCompendium)
         {
+            System.Diagnostics.Debug.WriteLine("encounter");
             compendium = newCompendium;
             DifficultyValues = enDifficulty;
             PCs = enPCs;
             PCLvls = enPCLvls;
             ChanceForSame = enChanceForSame;
             ExpValues = compendium.ExpValues;
+            System.Diagnostics.Debug.WriteLine("2");
             BaseExp = DetermineBaseExp();
             RestrictedTypes = restrictedTypes;
+            System.Diagnostics.Debug.WriteLine("3");
             AvailableMonsters = compendium.getSortedMonster(RestrictedTypes);
+            System.Diagnostics.Debug.WriteLine("4");
             ChosenMonsters = PickMonsters();
+            System.Diagnostics.Debug.WriteLine("5");
             GoldAmt = DetermineGold();
+            System.Diagnostics.Debug.WriteLine("6");
             if (GoldAmt > compendium.CommonItemValueMin)
             {
                 ChosenItems = FindPotentialItems(GoldAmt);
             }
+            System.Diagnostics.Debug.WriteLine("7");
             AdjExpMult = DetermineAdjustedExp();
+            System.Diagnostics.Debug.WriteLine("8");
             //while
         }
 
@@ -80,12 +88,11 @@ namespace DNDAPI
             Monster chosenMonster;
             int totalExp = 0;
             Random rand = new Random();
-            int monsterIndex = rand.Next(0, AvailableMonsters.Count - 1);
+            int monsterIndex = rand.Next(0, AvailableMonsters.Count);
             chosenMonster = AvailableMonsters[monsterIndex];
             string monsterType = chosenMonster.MainType;
             while (totalExp < (BaseExp * .8))
              {
-                
                 if(ExpValues[chosenMonster.CR] + totalExp < BaseExp) //if the exp given according to the CR + the current exptotal is greater than the base exp of the encounter, then
                 {
                     if (SingleType == true)
@@ -97,7 +104,7 @@ namespace DNDAPI
                     }
                     else
                     {
-                        BaseExp += ExpValues[chosenMonster.CR];
+                        totalExp += ExpValues[chosenMonster.CR];
                         pickedMons.Add(chosenMonster);
                         if( d100.Roll(1, 0) < ChanceForSame)//if its less than the chance threshold for a different monster
                         {
@@ -112,66 +119,53 @@ namespace DNDAPI
         private decimal DetermineGold()
         {
             decimal copper = 0;
-            Dictionary<int, Die[]> valueTable = new Dictionary<int, Die[]>();
+            Dictionary<int, Die[]> valueTable;
             int rolledNum = d100.Roll(1, 0);
             int foundKey = 0;
-
+            System.Diagnostics.Debug.WriteLine("determineGold");
             foreach (Monster m in ChosenMonsters)
             {
+                System.Diagnostics.Debug.WriteLine("beginning of foreach");
                 foundKey = 0;
                 if (m.CR.Total <= 4)
                 {
+                    System.Diagnostics.Debug.WriteLine("cr 4");
                     valueTable = compendium.CR0_4Gold;
-                    foreach(int key in valueTable.Keys)
-                    {
-                        if(rolledNum <= key)
-                        {
-                            foundKey = key;
-                        }
-                    }
+                    
                 }
                 else if (m.CR.Total <= 10)
                 {
+                    System.Diagnostics.Debug.WriteLine("cr 10");
                     valueTable = compendium.CR5_10Gold;
-                    foreach (int key in valueTable.Keys)
-                    {
-                        if (rolledNum <= key)
-                        {
-                            foundKey = key;
-                        }
-                    }
                 }
                 else if (m.CR.Total <= 16)
                 {
                     valueTable = compendium.CR11_16Gold;
-                    foreach (int key in valueTable.Keys)
-                    {
-                        if (rolledNum <= key)
-                        {
-                            foundKey = key;
-                        }
-                    }
+                    System.Diagnostics.Debug.WriteLine("cr 16");
+                    
                 }
                 else
                 {
                     valueTable = compendium.CR17_Gold;
-                    foreach (int key in valueTable.Keys)
+                    System.Diagnostics.Debug.WriteLine("cr 17+");
+                    
+                }
+                System.Diagnostics.Debug.WriteLine("rlling keys");
+                foreach (int key in valueTable.Keys)
+                {
+                    System.Diagnostics.Debug.WriteLine("eh?");
+                    if (rolledNum <= key && key > foundKey)
                     {
-                        if (rolledNum <= key)
-                        {
-                            foundKey = key;
-                        }
+                        foundKey = key;
                     }
                 }
-                if (foundKey == 0)
+                foreach (Die d in valueTable[foundKey])
                 {
-                    foundKey = valueTable.Keys.Last();
-                }
-                foreach(Die d in valueTable[foundKey])
-                {
+                    System.Diagnostics.Debug.WriteLine("key roll");
                     copper += d.RollInternal(0);
                 }
             }
+            System.Diagnostics.Debug.WriteLine("return");
             return copper / 100; //for gold value
         }
 
@@ -179,21 +173,24 @@ namespace DNDAPI
         {
             List<Item> foundItems = new List<Item>();
             Random rand = new Random();
-            int itemIndex = rand.Next(0, ChosenItems.Count - 1);
+            int itemIndex = rand.Next(0, compendium.FullItemList.Count);
             int currentValue = 0;
-            Item i = ChosenItems[itemIndex];
+            Item i = compendium.FullItemList[itemIndex];
+            System.Diagnostics.Debug.WriteLine("FindPotentialItems");
             while (currentValue < (GoldAmt * new decimal(0.8)))
             {
                 if (currentValue + i.Value < gold) //if the exp given according to the CR + the current exptotal is greater than the base exp of the encounter, then
                 {
                     foundItems.Add(i);
-                    itemIndex = rand.Next(0, ChosenItems.Count - 1);
-                    i = ChosenItems[itemIndex];
+                    itemIndex = rand.Next(0, compendium.FullItemList.Count);
+                    i = compendium.FullItemList[itemIndex];
+                    DetermineItemQuality(i);
+                    currentValue += i.Value;
                 }
                 else
                 {
-                    itemIndex = rand.Next(0, ChosenItems.Count - 1);
-                    i = ChosenItems[itemIndex];
+                    itemIndex = rand.Next(0, compendium.FullItemList.Count);
+                    i = compendium.FullItemList[itemIndex];
                 }
              }
             return foundItems;

@@ -11,21 +11,18 @@ namespace DNDAPI
         public int Numerator { get; set; }
         public int Denominator { get; set; }
 
-        public decimal Total { get; set; }
+        public decimal Total => (decimal)Numerator / Denominator;//lamda function--this is essentially an inline function. I also cast 
 
         public ChallengeRating(int leftNum, int rightNum)
         {
             Numerator = leftNum;
             Denominator = rightNum;
-
-            Total = Numerator / Denominator;
         }
 
         public ChallengeRating(int num)
         {
-            Numerator = 1;
+            Numerator = num;
             Denominator = 1;
-            Total = num;
         }
 
         public override string ToString()
@@ -36,7 +33,7 @@ namespace DNDAPI
             }
             else
             {
-                return Total.ToString();
+                return Numerator.ToString();
             }
         }
 
@@ -68,34 +65,13 @@ namespace DNDAPI
             {
                 return true;
             }
-            // STEP 4: Possibly check for equivalent hash codes
-            if (this.GetHashCode() != obj.GetHashCode())
-            {
-                return false;
-            }
-            // STEP 5: Check base.Equals if base overrides Equals()
-            System.Diagnostics.Debug.Assert(
-                base.GetType() != typeof(object));
-
-            if (!base.Equals(obj))
-            {
-                return false;
-            }
 
             // STEP 6: Compare identifying fields for equality.
-            return this.Total.Equals(obj.Total);
+            return this.Total == obj.Total;
         }
         public override int GetHashCode()
         {
-            if (Denominator == 1)
-            {
-                return Convert.ToInt32(Total) * 0x00010000;
-            }
-            else
-            {
-                return 0+Convert.ToInt32(Total) * 0x00010000;
-            }
-            
+            return (int)(Total * 43);//hashcodes gave theoretically infinite objects recognizable, small IDs. A hashcode must always equal other hashcodes if their ibjects values are the same.
         }
     }
 }
