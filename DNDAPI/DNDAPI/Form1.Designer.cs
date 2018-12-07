@@ -52,6 +52,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.LabelOptions = new System.Windows.Forms.Label();
+            this.CheckBoxCohesionSub = new System.Windows.Forms.CheckBox();
             this.PanelOutput.SuspendLayout();
             this.PanelInput.SuspendLayout();
             this.PanelInputOptions.SuspendLayout();
@@ -95,6 +96,7 @@
             // PanelInputOptions
             // 
             this.PanelInputOptions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(242)))), ((int)(((byte)(211)))));
+            this.PanelInputOptions.Controls.Add(this.CheckBoxCohesionSub);
             this.PanelInputOptions.Controls.Add(this.label8);
             this.PanelInputOptions.Controls.Add(this.BoxRestrictedTypes);
             this.PanelInputOptions.Controls.Add(this.label7);
@@ -336,6 +338,18 @@
             this.LabelOptions.Text = "Options";
             this.LabelOptions.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // CheckBoxCohesionSub
+            // 
+            this.CheckBoxCohesionSub.AutoSize = true;
+            this.CheckBoxCohesionSub.Font = new System.Drawing.Font("Noto Sans", 8.25F, System.Drawing.FontStyle.Bold);
+            this.CheckBoxCohesionSub.ForeColor = System.Drawing.Color.Black;
+            this.CheckBoxCohesionSub.Location = new System.Drawing.Point(79, 400);
+            this.CheckBoxCohesionSub.Name = "CheckBoxCohesionSub";
+            this.CheckBoxCohesionSub.Size = new System.Drawing.Size(129, 19);
+            this.CheckBoxCohesionSub.TabIndex = 33;
+            this.CheckBoxCohesionSub.Text = "Including subtype?";
+            this.CheckBoxCohesionSub.UseVisualStyleBackColor = true;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -379,6 +393,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox BoxRestrictedTypes;
+        private System.Windows.Forms.CheckBox CheckBoxCohesionSub;
     }
 }
 

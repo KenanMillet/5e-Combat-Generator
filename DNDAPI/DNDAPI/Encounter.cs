@@ -20,6 +20,7 @@ namespace DNDAPI
         public int ExpAmt { get; set; }
         public decimal AdjExpMult { get; set; }//this is not the actual exp rewarded
         public bool SingleType { get; set; }
+        public bool SingleSubType { get; set; }
         public decimal GoldAmt { get; set; }
         public List<string> RestrictedTypes { get; set; }
         public List<Monster> AvailableMonsters { get; set; }
@@ -27,24 +28,7 @@ namespace DNDAPI
         public List<Item> ChosenItems { get; set; }
         public Dictionary<ChallengeRating, int> ExpValues { get; set; }
 
-        public Encounter()
-        {
-            DifficultyValues = new int[0];
-            PCs = 0;
-            PCLvls = 0;
-            ChanceForSame = 0;
-            BaseExp = 0;
-            ExpAmt = 0;
-            AdjExpMult = 0;
-            ExpValues = new Dictionary<ChallengeRating, int>();
-            GoldAmt = 0;
-            RestrictedTypes = new List<string>();
-            AvailableMonsters = new List<Monster>();
-            ChosenMonsters = new List<Monster>();
-            ChosenItems = new List<Item>();
-        }
-
-        public Encounter(int enPCs, int enPCLvls, int[] enDifficulty, int enChanceForSame, bool enSingleType,  List<string> enRestrictedTypes, Compendium enCompendium)
+        public Encounter(int enPCs, int enPCLvls, int[] enDifficulty, int enChanceForSame, bool enSingleType,  bool enSingleSubType, List<string> enRestrictedTypes, Compendium enCompendium)
         {
             compendium = enCompendium;
             DifficultyValues = enDifficulty;
@@ -52,6 +36,7 @@ namespace DNDAPI
             PCLvls = enPCLvls;
             ChanceForSame = enChanceForSame;
             SingleType = enSingleType;
+            SingleSubType = enSingleSubType;
             ExpValues = compendium.ExpValues;
             BaseExp = DetermineBaseExp();
             RestrictedTypes = enRestrictedTypes;
@@ -84,15 +69,41 @@ namespace DNDAPI
             Random rand = new Random();
             int monsterIndex = rand.Next(0, AvailableMonsters.Count);
             chosenMonster = AvailableMonsters[monsterIndex];
-            string monsterType;
+            string monsterType = null;
+            string monsterSubType = null;
+            bool IsPicked = false;
             while (totalExp < (BaseExp * .8))
              {
                 if (ExpValues[chosenMonster.CR] + totalExp <= BaseExp) //if the exp given according to the CR + the current exptotal is greater than the base exp of the encounter, then
                 {
                     if (SingleType == true)
                     {
-                        monsterType = chosenMonster.MainType;
-                        if (chosenMonster.MainType == monsterType)
+                        if (IsPicked == false)
+                        {
+                            monsterType = chosenMonster.MainType;
+                            if( SingleSubType == true && chosenMonster.Subtype != null)
+                            {
+                                monsterSubType = chosenMonster.Subtype;
+                            }
+                            IsPicked = true;
+                        }
+                        if (chosenMonster.Subtype != null && monsterSubType != null)
+                        {
+                            if (chosenMonster.MainType == monsterType && chosenMonster.Subtype == monsterSubType)
+                            {
+                                totalExp += ExpValues[chosenMonster.CR];
+                                pickedMons.Add(chosenMonster);
+                                if (d100.Roll(1, 0) > ChanceForSame)//if its less than the chance threshold for a different monster
+                                {
+                                    chosenMonster = AvailableMonsters[rand.Next(0, AvailableMonsters.Count)];
+                                }
+                            }
+                            else
+                            {
+                                chosenMonster = AvailableMonsters[rand.Next(0, AvailableMonsters.Count)];
+                            }
+                        }
+                        else if (chosenMonster.MainType == monsterType)
                         {
                             totalExp += ExpValues[chosenMonster.CR];
                             pickedMons.Add(chosenMonster);
@@ -211,11 +222,11 @@ namespace DNDAPI
                 }
                 else if (i.Value < compendium.CommonItemValueMin + (compendium.CommonItemValueMax * .4))
                 {
-                    i.Quality = "Fair";
+                    i.Quality = "Mediocre";
                 }
                 else if (i.Value < compendium.CommonItemValueMin + (compendium.CommonItemValueMax * .6))
                 {
-                    i.Quality = "Average";
+                    i.Quality = "";
                 }
                 else if (i.Value < compendium.CommonItemValueMin + (compendium.CommonItemValueMax * .8))
                 {
@@ -236,11 +247,11 @@ namespace DNDAPI
                 }
                 else if (i.Value < compendium.CommonItemValueMax + (compendium.UncommonItemValueMax * .4))
                 {
-                    i.Quality = "Fair";
+                    i.Quality = "Mediocre";
                 }
                 else if (i.Value < compendium.CommonItemValueMax + (compendium.UncommonItemValueMax * .6))
                 {
-                    i.Quality = "Average";
+                    i.Quality = "";
                 }
                 else if (i.Value < compendium.CommonItemValueMax + (compendium.UncommonItemValueMax * .8))
                 {
@@ -261,11 +272,11 @@ namespace DNDAPI
                 }
                 else if (i.Value < compendium.UncommonItemValueMax + (compendium.RareItemValueMax * .4))
                 {
-                    i.Quality = "Fair";
+                    i.Quality = "Mediocre";
                 }
                 else if (i.Value < compendium.UncommonItemValueMax + (compendium.RareItemValueMax * .6))
                 {
-                    i.Quality = "Average";
+                    i.Quality = "";
                 }
                 else if (i.Value < compendium.UncommonItemValueMax + (compendium.RareItemValueMax * .8))
                 {
@@ -286,11 +297,11 @@ namespace DNDAPI
                 }
                 else if (i.Value < compendium.RareItemValueMax + (compendium.VeryRareItemValueMax * .4))
                 {
-                    i.Quality = "Fair";
+                    i.Quality = "Mediocre";
                 }
                 else if (i.Value < compendium.RareItemValueMax + (compendium.VeryRareItemValueMax * .6))
                 {
-                    i.Quality = "Average";
+                    i.Quality = "";
                 }
                 else if (i.Value < compendium.RareItemValueMax + (compendium.VeryRareItemValueMax * .8))
                 {

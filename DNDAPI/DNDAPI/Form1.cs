@@ -28,7 +28,7 @@ namespace DNDAPI
 
         WebClient client = new WebClient();
 
-        Encounter encounter = new Encounter();
+        Encounter encounter;
 
         float largeFontSize = 16;
         float normalFontSize = 14;
@@ -40,7 +40,8 @@ namespace DNDAPI
         public FormMain()
         {
             InitializeComponent();
-            
+            BoxOutput.AppendText("Generating compendium..." + "\n");
+            generateCompendium();
         }
 
         private void ButtonGenerate_Click(object sender, EventArgs e)
@@ -56,11 +57,6 @@ namespace DNDAPI
             bool inputError = false;
             List<string> RestrictedTypes = new List<string>(BoxRestrictedTypes.Text.Split(','));
 
-            if (compendium == null)
-            {
-                BoxOutput.AppendText("Generating compendium..." + "\n");
-                generateCompendium();
-            }
             // INPUT VALIDATION AND VARIABLE POPULATION
             if (MaskedTextBoxNumber.Text != "" && MaskedTextBoxLevel.Text != "")
             {
@@ -112,7 +108,7 @@ namespace DNDAPI
                     RestrictedTypes[i] = RestrictedTypes[i].Trim(' ');
                 }
                 BoxOutput.AppendText("Generating encounter...");
-                encounter = new Encounter(pcTotal, pcLevel, difficulty, Convert.ToInt32(BoxSameChance.Text), CheckBoxCohesion.Checked , RestrictedTypes, compendium);
+                encounter = new Encounter(pcTotal, pcLevel, difficulty, Convert.ToInt32(BoxSameChance.Text), CheckBoxCohesion.Checked , CheckBoxCohesionSub.Checked, RestrictedTypes, compendium);
                 PrintEncounter(encounter);
                 //foreach (Monster m in compendium.FullMonsterList)
                 //{
